@@ -14,9 +14,23 @@ jobs:
           submodules: true
       - run: cmake .
       - run: cmake --build .
-      - name: Run
-        uses: GuillaumeFalourd/command-output-file-action@v1.1
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          command_line: ./my_allocator_03 ; ./my_allocator
-          output_file_name: output.txt
-          display_file_content: YES # this is also the default value if not informed
+          tag_name: ${{ github.run_number }}
+          release_name: Release ${{ github.run_number }}
+          draft: false
+          prerelease: false
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./MyAllocator-0.0.1-Linux.deb
+          asset_name: MyAllocator-0.0.1-Linux.deb
+          asset_content_type: application/vnd.debian.binary-package
