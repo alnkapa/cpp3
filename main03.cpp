@@ -37,12 +37,10 @@ int main()
     // факториал ключа
     typedef std::map<int, int, std::less<int>, MyAllocator03<pair_t, 10> > map_t;
     map_t o3Map;
-    std::cout << "init" << std::endl;
     for (int i = 0; i < 3; i++)
     {
       try
       {
-        std::cout << "add: " << i << std::endl;
         o3Map.insert(pair_t(i, factorial(i)));
       }
       catch (...)
